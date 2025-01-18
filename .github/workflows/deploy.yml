@@ -1,11 +1,9 @@
-name: Build and Push Docker Image to Docker Hub with Versioning
+name: Build and Push Docker Image to Docker Hub with SHA Tagging
 
 on:
   push:
     branches:
       - main # Trigger on pushes to the `main` branch
-    tags: # Trigger on tags
-      - 'v*' # Matches version tags like v1.0, v2.3, etc.
   pull_request:
     branches:
       - main # Trigger on pull requests to `main`
@@ -23,11 +21,9 @@ jobs:
     - name: Set Docker tag
       id: vars
       run: |
-        if [[ "${{ github.ref }}" == refs/tags/* ]]; then
-          echo "TAG=${{ github.ref_name }}" >> $GITHUB_ENV
-        else
-          echo "TAG=latest" >> $GITHUB_ENV
-        fi
+        SHORT_SHA=${{ github.sha::0:7 }} # Use the first 7 characters of the GitHub SHA
+        echo "TAG=${SHORT_SHA}" >> $GITHUB_ENV
+        echo "LATEST_TAG=latest" >> $GITHUB_ENV
 
     # Step 3: Log in to Docker Hub
     - name: Log in to Docker Hub
@@ -40,8 +36,10 @@ jobs:
     - name: Build Docker image
       run: |
         docker build -t ${{ secrets.DOCKER_USERNAME }}/pos-sytem-usecase:${{ env.TAG }} ci
+        docker tag ${{ secrets.DOCKER_USERNAME }}/pos-sytem-usecase:${{ env.TAG }} ${{ secrets.DOCKER_USERNAME }}/pos-sytem-usecase:${{ env.LATEST_TAG }}
 
     # Step 5: Push the Docker image to Docker Hub
     - name: Push Docker image
       run: |
         docker push ${{ secrets.DOCKER_USERNAME }}/pos-sytem-usecase:${{ env.TAG }}
+        docker push ${{ secrets.DOCKER_USERNAME }}/pos-sytem-usecase:${{ env.LATEST_TAG }}
