@@ -39,7 +39,6 @@ jobs:
     # Step 4: Build the Docker image
     - name: Build Docker image
       run: |
-        cd usecase/ci
         docker build -t ${{ secrets.DOCKER_USERNAME }}/my-app:${{ env.TAG }} ${{ github.workspace }}/ci .
 
     # Step 5: Push the Docker image to Docker Hub
