@@ -1,0 +1,16 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: root-app-of-apps
+  namespace: cicd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  destination:
+    namespace: cicd
+    server: https://kubernetes.default.svc
+  source:
+    path: project
+    repoURL: https://github.com/adilson-silva1_mars/usecase.git
+    targetRevision: main

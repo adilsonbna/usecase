@@ -1,0 +1,112 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: appset-dev
+  namespace: cicd
+spec:
+  generators:
+    - list:
+        elements:
+          - env: dev
+          #- env: prd
+  template:
+    metadata:
+      name: apps-dev
+      namespace: cicd
+      finalizers:
+        - resources-finalizer.argocd.argoproj.io
+    spec:
+      project: app-of-apps
+      source:
+        repoURL: "https://github.com/adilson-silva1_mars/usecase.git"
+        targetRevision: main
+        path: envs/dev
+        directory:
+          recurse: true
+      destination:
+        server: https://kubernetes.default.svc
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+          allowEmpty: false
+        syncOptions:
+          - Validate=true
+          - CreateNamespace=false
+          - PrunePropagationPolicy=foreground
+          - PruneLast=true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: appset-prd
+  namespace: cicd
+spec:
+  generators:
+    - list:
+        elements:
+          #- env: dev
+          - env: prd
+  template:
+    metadata:
+      name: apps-prd
+      namespace: cicd
+      finalizers:
+        - resources-finalizer.argocd.argoproj.io
+    spec:
+      project: app-of-apps
+      source:
+        repoURL: "https://github.com/adilson-silva1_mars/usecase.git"
+        targetRevision: main
+        path: envs/prd
+        directory:
+          recurse: true
+      destination:
+        server: https://kubernetes.default.svc
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+          allowEmpty: false
+        syncOptions:
+          - Validate=true
+          - CreateNamespace=false
+          - PrunePropagationPolicy=foreground
+          - PruneLast=true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: appset-core
+  namespace: cicd
+spec:
+  generators:
+    - list:
+        elements:
+          - env: core
+  template:
+    metadata:
+      name: apps-core
+      namespace: cicd
+      finalizers:
+        - resources-finalizer.argocd.argoproj.io
+    spec:
+      project: app-of-apps
+      source:
+        repoURL: "https://github.com/adilson-silva1_mars/usecase.git"
+        targetRevision: main
+        path: envs/core
+        directory:
+          recurse: true
+      destination:
+        server: https://kubernetes.default.svc
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+          allowEmpty: false
+        syncOptions:
+          - Validate=true
+          - CreateNamespace=false
+          - PrunePropagationPolicy=foreground
+          - PruneLast=true
