@@ -12,5 +12,5 @@ spec:
     server: https://kubernetes.default.svc
   source:
     path: project
-    repoURL: https://github.com/adilson-silva1_mars/usecase.git
+    repoURL: https://github.com/adilsonbna/usecase.git
     targetRevision: main

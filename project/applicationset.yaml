@@ -18,7 +18,7 @@ spec:
     spec:
       project: app-of-apps
       source:
-        repoURL: "https://github.com/adilson-silva1_mars/usecase.git"
+        repoURL: "https://github.com/adilsonbna/usecase.git"
         targetRevision: main
         path: envs/dev
         directory:
@@ -56,7 +56,7 @@ spec:
     spec:
       project: app-of-apps
       source:
-        repoURL: "https://github.com/adilson-silva1_mars/usecase.git"
+        repoURL: "https://github.com/adilsonbna/usecase.git"
         targetRevision: main
         path: envs/prd
         directory:
@@ -93,7 +93,7 @@ spec:
     spec:
       project: app-of-apps
       source:
-        repoURL: "https://github.com/adilson-silva1_mars/usecase.git"
+        repoURL: "https://github.com/adilsonbna/usecase.git"
         targetRevision: main
         path: envs/core
         directory:

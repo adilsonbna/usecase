@@ -16,7 +16,7 @@ spec:
   project: default
   source:
     path: helm-charts/security/kyverno
-    repoURL: "https://github.com/adilson-silva1_mars/usecase.git"
+    repoURL: "https://github.com/adilsonbna/usecase.git"
     targetRevision: main
   syncPolicy:
     automated:
