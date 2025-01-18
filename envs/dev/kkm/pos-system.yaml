@@ -15,7 +15,7 @@ spec:
     server: https://kubernetes.default.svc
   project: default
   source:
-    path: helm-charts/pos-system
+    path: helm-charts/pos-system/application
     repoURL: "https://github.com/adilson-silva1_mars/usecase.git"
     targetRevision: main
   syncPolicy:
