@@ -17,11 +17,11 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
-    # Step 2: Set up the Docker tag
+    # Step 2: Set up the Docker tag using GitHub SHA
     - name: Set Docker tag
       id: vars
       run: |
-        SHORT_SHA=${{ github.sha::0:7 }} # Use the first 7 characters of the GitHub SHA
+        SHORT_SHA=$(echo "${{ github.sha }}" | cut -c1-7) # Extract first 7 characters of SHA
         echo "TAG=${SHORT_SHA}" >> $GITHUB_ENV
         echo "LATEST_TAG=latest" >> $GITHUB_ENV
 
