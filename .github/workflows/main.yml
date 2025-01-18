@@ -1,0 +1,47 @@
+name: Build and Push Docker Image to Docker Hub with Versioning
+
+on:
+  push:
+    branches:
+      - main # Trigger on pushes to the `main` branch
+    tags: # Trigger on tags
+      - 'v*' # Matches version tags like v1.0, v2.3, etc.
+  pull_request:
+    branches:
+      - main # Trigger on pull requests to `main`
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+    # Step 1: Checkout the code
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    # Step 2: Set up the Docker tag
+    - name: Set Docker tag
+      id: vars
+      run: |
+        if [[ "${{ github.ref }}" == refs/tags/* ]]; then
+          echo "TAG=${{ github.ref_name }}" >> $GITHUB_ENV
+        else
+          echo "TAG=latest" >> $GITHUB_ENV
+        fi
+
+    # Step 3: Log in to Docker Hub
+    - name: Log in to Docker Hub
+      uses: docker/login-action@v2
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }} # Docker Hub username stored in secrets
+        password: ${{ secrets.DOCKER_PASSWORD }} # Docker Hub password stored in secrets
+
+    # Step 4: Build the Docker image
+    - name: Build Docker image
+      run: |
+        docker build -t ${{ secrets.DOCKER_USERNAME }}/my-app:${{ env.TAG }} .
+
+    # Step 5: Push the Docker image to Docker Hub
+    - name: Push Docker image
+      run: |
+        docker push ${{ secrets.DOCKER_USERNAME }}/my-app:${{ env.TAG }}
