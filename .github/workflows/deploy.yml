@@ -1,4 +1,4 @@
-name: Build and Push Docker Image to Docker Hub with Versioning
+name: Build and Push Docker Image to Docker Hub with Versioning 
 
 on:
   push:
