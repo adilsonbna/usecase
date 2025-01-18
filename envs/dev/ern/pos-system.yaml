@@ -1,0 +1,30 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  annotations:
+    argocd-image-updater.argoproj.io/write-back-method: git
+    argocd-image-updater.argoproj.io/update-strategy: semver
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+  name: dev-ern-pos-system
+  namespace: cicd
+spec:
+  destination:
+    namespace: dev-ern-pos-system
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    path: helm-charts/pos-system
+    repoURL: "https://github.com/adilson-silva1_mars/usecase.git"
+    targetRevision: main
+  syncPolicy:
+    automated:
+      allowEmpty: false
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - Validate=true
+      - CreateNamespace=true
+      - PrunePropagationPolicy=foreground
+      - PruneLast=true

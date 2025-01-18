@@ -1,0 +1,31 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  annotations:
+    argocd-image-updater.argoproj.io/write-back-method: git
+    argocd-image-updater.argoproj.io/update-strategy: semver
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+  name: monitoring-kube-prometheus-stack-core
+  namespace: cicd
+spec:
+  destination:
+    namespace: core-monitoring
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    path: helm-charts/monitoring/kube-prometheus-stack
+    repoURL: "https://github.com/adilson-silva1_mars/usecase.git"
+    targetRevision: main
+  syncPolicy:
+    automated:
+      allowEmpty: false
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - Validate=true
+      - CreateNamespace=true
+      - PrunePropagationPolicy=foreground
+      - PruneLast=true
+      - ServerSideApply=true

@@ -1,0 +1,30 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  annotations:
+    argocd-image-updater.argoproj.io/write-back-method: git
+    argocd-image-updater.argoproj.io/update-strategy: semver
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+  name: security-kyverno-core
+  namespace: cicd
+spec:
+  destination:
+    namespace: core-security
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    path: helm-charts/security/kyverno
+    repoURL: "https://github.com/adilson-silva1_mars/usecase.git"
+    targetRevision: main
+  syncPolicy:
+    automated:
+      allowEmpty: false
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - Validate=true
+      - CreateNamespace=true
+      - PrunePropagationPolicy=foreground
+      - PruneLast=true
