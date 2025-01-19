@@ -68,7 +68,7 @@ jobs:
 
         # Slack message construction
         if [ "$CRITICAL_COUNT" -gt 1 ]; then
-          SLACK_MESSAGE="*Trivy Scan: FAILED* - More than 10 critical vulnerabilities found in Docker image '${{ env.TAG }}'.\n\n*Details:*\n$TABLE"
+          SLACK_MESSAGE="*Trivy Scan: FAILED* - More than 10 critical vulnerabilities found in Docker image '${{ env.TAG }}' Critical vulnerabilities: $CRITICAL_COUNT.\n\n*Details:*\n$TABLE"
           curl -X POST -H 'Content-type: application/json' --data "{\"text\":\"${SLACK_MESSAGE}\"}" ${{ secrets.SLACK_WEBHOOK_URL }}
           exit 1
         else
