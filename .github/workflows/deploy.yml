@@ -17,12 +17,12 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
     
-    # Step : Record the start time of the pipeline
+    # Step 2: Record the start time of the pipeline
     - name: Record Start Time
       id: start_time
       run: echo "start_time=$(date -u +"%Y-%m-%dT%H:%M:%SZ")" >> $GITHUB_ENV     
 
-    # Step 2: Set up the Docker tag using GitHub SHA
+    # Step 3: Set up the Docker tag using GitHub SHA
     - name: Set Docker tag
       id: vars
       run: |
@@ -30,20 +30,20 @@ jobs:
         echo "TAG=${SHORT_SHA}" >> $GITHUB_ENV
         echo "LATEST_TAG=latest" >> $GITHUB_ENV
 
-    # Step 3: Log in to Docker Hub
+    # Step 4: Log in to Docker Hub
     - name: Log in to Docker Hub
       uses: docker/login-action@v2
       with:
         username: ${{ secrets.DOCKER_USERNAME }} # Docker Hub username stored in secrets
         password: ${{ secrets.DOCKER_PASSWORD }} # Docker Hub password stored in secrets
 
-    # Step 4: Build the Docker image
+    # Step 5: Build the Docker image
     - name: Build Docker image
       run: |
         docker build -t ${{ secrets.DOCKER_USERNAME }}/pos-sytem-usecase:${{ env.TAG }} ci
         docker tag ${{ secrets.DOCKER_USERNAME }}/pos-sytem-usecase:${{ env.TAG }} ${{ secrets.DOCKER_USERNAME }}/pos-sytem-usecase:${{ env.LATEST_TAG }}
 
-    # Step 5: Trivy Scan Images
+    # Step 6: Trivy Scan Images
     - name: Run Trivy Scan
       run: |
         curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh
@@ -81,7 +81,13 @@ jobs:
           curl -X POST -H 'Content-type: application/json' --data "{\"text\":\"${SLACK_MESSAGE}\"}" ${{ secrets.SLACK_WEBHOOK_URL }}
         fi   
 
-    # Step : Calculate duration and record completion time
+    # Step 7: Push the Docker image to Docker Hub
+    - name: Push Docker image
+      run: |
+        docker push ${{ secrets.DOCKER_USERNAME }}/pos-sytem-usecase:${{ env.TAG }}
+        docker push ${{ secrets.DOCKER_USERNAME }}/pos-sytem-usecase:${{ env.LATEST_TAG }}
+        
+    # Step 8: Calculate duration and record completion time
     - name: Record Completion Time and Duration
       id: timing
       run: |
@@ -92,9 +98,9 @@ jobs:
         echo "end_time=$end_time" >> $GITHUB_ENV
         echo "duration=$duration_formatted" >> $GITHUB_ENV
 
-    # Step : Send data to Slack
-    # Step 5: Send Enhanced Notification to Slack
-    - name: Notify Slack with Enhanced Format
+
+    # Step 9: Send Enhanced Notification to Slack
+    - name: Notify Slack Deployment
       env:
         REPO_NAME: ${{ github.repository }}
         BRANCH_NAME: ${{ github.ref_name }}
@@ -157,11 +163,5 @@ jobs:
             }
           ]
         }' ${{ secrets.SLACK_WEBHOOK_URL }}
-
-    # Step 6: Push the Docker image to Docker Hub
-    #- name: Push Docker image
-    #  run: |
-    #    docker push ${{ secrets.DOCKER_USERNAME }}/pos-sytem-usecase:${{ env.TAG }}
-    #    docker push ${{ secrets.DOCKER_USERNAME }}/pos-sytem-usecase:${{ env.LATEST_TAG }}
 
     
