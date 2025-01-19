@@ -199,9 +199,9 @@ image:
 # trivy-operator does not have a user interface.
 service:
   # -- if true, the Service doesn't allocate any IP
-  headless: true
+  headless: false
   # -- port exposed by the Service
-  metricsPort: 80
+  metricsPort: 8080
   # -- annotations added to the operator's service
   annotations: {}
   # -- appProtocol of the monitoring service
@@ -216,7 +216,7 @@ service:
 # have no effect.
 serviceMonitor:
   # -- enabled determines whether a serviceMonitor should be deployed
-  enabled: false
+  enabled: true
   # -- The namespace where Prometheus expects to find service monitors
   namespace: ~
   # -- Interval at which metrics should be scraped. If not specified Prometheus’ global scrape interval is used.
