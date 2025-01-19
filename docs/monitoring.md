@@ -59,6 +59,13 @@ Important dashboard files create for the use case
 ├── pos-system.yaml
 ```
 ![ArgoCD](img/argocd.jpg)
+ArgoCD as a core component of the application deployment pipeline, enabling faster, automated, and consistent deployments while improving visibility, traceability, and operational efficiency.
+
 ![Kyverno](img/kyverno.jpg)
+Kyverno as the policy management solution for Kubernetes to ensure compliance, enforce standards, automate security practices, and streamline cluster governance.
+
 ![Trivy](img/trivy.jpg)
+Trivy is a comprehensive, easy-to-use security scanner that helps identify vulnerabilities, misconfigurations, and exposed secrets across various assets.
+
 ![Application](img/application.jpg)
+Design and implement a centralized dashboard for the POS system that collects, analyzes, and visualizes key metrics from the application side.
