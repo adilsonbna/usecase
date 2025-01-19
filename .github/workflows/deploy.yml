@@ -107,7 +107,7 @@ jobs:
       run: |
         curl -X POST -H 'Content-type: application/json' \
         --data '{
-          "text": "CI/CD Pipeline Report:\n- *Start Time:* '"$START_TIME"'\n- *End Time:* '"$END_TIME"'\n- *Duration:* '"$DURATION"'"
+          "text": "CI/CD Pipeline Report from ${{ env.TAG }}: ${{ secrets.DOCKER_USERNAME }}/pos-sytem-usecase:${{ env.TAG }} \n- *Start Time:* '"$START_TIME"'\n- *End Time:* '"$END_TIME"'\n- *Duration:* '"$DURATION"'"
         }' ${{ secrets.SLACK_WEBHOOK_URL }}
 
     # Step 6: Push the Docker image to Docker Hub
