@@ -43,7 +43,7 @@ jobs:
       run: |
         curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh
         # Log Tricy table scan
-        SCAN_TABLE="./bin/trivy image --format json table ${{ secrets.DOCKER_USERNAME }}/pos-sytem-usecase:${{ env.LATEST_TAG }}"
+        SCAN_TABLE=$(./bin/trivy image --format json table ${{ secrets.DOCKER_USERNAME }}/pos-sytem-usecase:${{ env.LATEST_TAG }})
         curl -X POST -H 'Content-type: application/json' --data "{\"text\":\"${SCAN_TABLE}\"}" ${{ secrets.SLACK_WEBHOOK_URL }}
         # Run Trivy scan and output as JSON
         ./bin/trivy image --severity LOW --no-progress --format json ${{ secrets.DOCKER_USERNAME }}/pos-sytem-usecase:${{ env.LATEST_TAG }} > trivy-results.json
