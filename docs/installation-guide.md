@@ -1,8 +1,8 @@
-# Commands to Create an Infrastructure with ArgoCD
+# Create an Infrastructure set up an environment using ArgoCD.
 
 This repository contains the necessary commands and organization to set up an environment using ArgoCD.
 
-# Folder Organization
+## Folder Organization
 The repository structure has been organized to separate development and production environments, ensuring better management and flexibility for testing and adjustments.
 
 ```plaintext

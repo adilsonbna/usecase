@@ -55,6 +55,11 @@ Important dashboard files create for the use case
 
 ├── argocd.yaml
 ├── kyverno.yaml
-├── pos-system.yaml
 ├── trivy.yaml
+├── pos-system.yaml
 ```
+
+[ArgoCD](docs/img/argocd.jpg)
+[Kyverno](docs/img/kyverno.jpg)
+[Trivy](docs/img/trivy.jpg)
+[Application](docs/img/application.jpg)
