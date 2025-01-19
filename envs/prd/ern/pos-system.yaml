@@ -20,7 +20,7 @@ spec:
         - name: image.repository
           value: adilsonbna/pos-sytem-usecase
         - name: image.tag
-          value: '145933f'
+          value: 'latest'
     path: helm-charts/pos-system/application
     repoURL: "https://github.com/adilsonbna/usecase.git"
     targetRevision: main
