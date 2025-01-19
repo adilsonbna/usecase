@@ -1,9 +1,23 @@
 const express = require('express');
 const path = require('path');
 const client = require('prom-client');
+const winston = require('winston');
 
 const app = express();
 const PORT = 3000;
+
+// Configure Winston logger
+const logger = winston.createLogger({
+    level: 'info', // Logging level (info, error, warn, etc.)
+    format: winston.format.combine(
+        winston.format.timestamp(),
+        winston.format.json() // Log output in JSON format
+    ),
+    transports: [
+        new winston.transports.Console(), // Log to console
+        new winston.transports.File({ filename: 'logs/app.log' }) // Log to file
+    ]
+});
 
 // Initialize Prometheus registry
 const register = new client.Registry();
@@ -16,13 +30,13 @@ const totalRequests = new client.Counter({
 
 const totalSales = new client.Counter({
     name: 'total_sales',
-    help: 'Total sales amount in the POS system (cumulative sales value)',
+    help: 'Total number of sales transactions in the POS system',
     labelNames: ['currency']
 });
 
 const totalSalesValue = new client.Counter({
     name: 'total_sales_value',
-    help: 'Total value of sales in the POS system (total sales in USD)'
+    help: 'Total monetary value of sales in the POS system (in USD)',
 });
 
 const itemsSold = new client.Counter({
@@ -30,48 +44,15 @@ const itemsSold = new client.Counter({
     help: 'Total number of items sold in the POS system'
 });
 
-const activeUsers = new client.Gauge({
-    name: 'active_users',
-    help: 'Number of active users currently using the POS system'
-});
-
-const httpRequestDuration = new client.Histogram({
-    name: 'http_request_duration_seconds',
-    help: 'Histogram of HTTP request durations in seconds',
-    labelNames: ['method', 'route', 'status_code']
-});
-
-const errorCount = new client.Counter({
-    name: 'error_count',
-    help: 'Number of errors in the POS system',
-    labelNames: ['type']
-});
-
 // Register metrics
 register.registerMetric(totalRequests);
 register.registerMetric(totalSales);
 register.registerMetric(totalSalesValue);
 register.registerMetric(itemsSold);
-register.registerMetric(activeUsers);
-register.registerMetric(httpRequestDuration);
-register.registerMetric(errorCount);
 
-// Set the default registry
-client.collectDefaultMetrics({ register });
-
-// Middleware to track active users
-let users = 0;
+// Middleware to log requests and count them
 app.use((req, res, next) => {
-    users++;
-    activeUsers.set(users);
-
-    const end = httpRequestDuration.startTimer(); // Start timing the request
-    res.on('finish', () => {
-        end({ method: req.method, route: req.path, status_code: res.statusCode });
-        users--;
-        activeUsers.set(users);
-    });
-
+    logger.info(`Request: ${req.method} ${req.url}`);
     totalRequests.inc(); // Increment the request counter
     next();
 });
@@ -90,29 +71,25 @@ app.get('/', (req, res) => {
 
 // Expose /metrics endpoint for Prometheus
 app.get('/metrics', async (req, res) => {
+    logger.info('Metrics endpoint accessed');
     res.set('Content-Type', register.contentType);
     res.end(await register.metrics());
 });
 
-// Endpoint to simulate sales transactions (for testing)
+// Endpoint to simulate sales transactions
 app.post('/sale', (req, res) => {
-    const amount = Math.random() * 100; // Simulate a sale amount (between 0 and 100 USD)
-    const items = Math.floor(Math.random() * 10) + 1; // Simulate items sold (between 1 and 10)
+    const amount = Math.random() * 100; // Simulate a random sale amount (between 0 and 100 USD)
+    const items = Math.floor(Math.random() * 5) + 1; // Simulate a random number of items sold (1 to 5)
 
-    totalSales.inc({ currency: 'USD' }, amount); // Increment the sales counter with the amount and currency label
+    totalSales.inc({ currency: 'USD' }, 1); // Increment the sales counter by 1
     totalSalesValue.inc(amount); // Increment the total sales value counter
     itemsSold.inc(items); // Increment the items sold counter
 
-    res.send(`Sale of $${amount.toFixed(2)} recorded with ${items} items.`);
-});
-
-// Endpoint to simulate errors
-app.get('/error', (req, res) => {
-    errorCount.inc({ type: 'server_error' }); // Increment the error counter
-    res.status(500).send('An error occurred.');
+    logger.info(`Sale recorded: $${amount.toFixed(2)} for ${items} items`);
+    res.send(`Sale recorded: $${amount.toFixed(2)} for ${items} items.`);
 });
 
 // Start the server
 app.listen(PORT, () => {
-    console.log(`POS system running at http://localhost:${PORT}`);
+    logger.info(`POS system running at http://localhost:${PORT}`);
 });

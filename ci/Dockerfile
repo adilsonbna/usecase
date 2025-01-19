@@ -12,6 +12,9 @@ RUN npm install prom-client
 # Copy the application files
 COPY . .
 
+# Create a directory for logs
+RUN mkdir -p /app/logs
+
 # Expose the necessary ports
 EXPOSE 3000
 
