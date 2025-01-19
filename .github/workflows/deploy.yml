@@ -1,4 +1,4 @@
-name: Build and Push Docker Image to Docker Hub with SHA Tagging
+name: Build and Push Docker Image to Docker Hub with SHA Tagging 
 
 on:
   push:
