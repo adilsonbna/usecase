@@ -16,12 +16,6 @@ jobs:
     # Step 1: Checkout the code
     - name: Checkout code
       uses: actions/checkout@v3
-
-    # Running build and tests
-    - name: Running build and tests
-      run: |
-        echo "Running build and tests..."
-        sleep 10  # Simulate build/test steps
     
     # Step : Record the start time of the pipeline
     - name: Record Start Time
@@ -99,15 +93,69 @@ jobs:
         echo "duration=$duration_formatted" >> $GITHUB_ENV
 
     # Step : Send data to Slack
-    - name: Notify Slack
+    # Step 5: Send Enhanced Notification to Slack
+    - name: Notify Slack with Enhanced Format
       env:
+        REPO_NAME: ${{ github.repository }}
+        BRANCH_NAME: ${{ github.ref_name }}
         START_TIME: ${{ env.start_time }}
         END_TIME: ${{ env.end_time }}
         DURATION: ${{ env.duration }}
+        STATUS: "Success" # Update dynamically if needed
       run: |
         curl -X POST -H 'Content-type: application/json' \
         --data '{
-          "text": "CI/CD Pipeline Report from ${{ env.TAG }}: ${{ secrets.DOCKER_USERNAME }}/pos-sytem-usecase:${{ env.TAG }} \n- *Start Time:* '"$START_TIME"'\n- *End Time:* '"$END_TIME"'\n- *Duration:* '"$DURATION"'"
+          "blocks": [
+            {
+              "type": "header",
+              "text": {
+                "type": "plain_text",
+                "text": "🚀 CI/CD Pipeline Completed",
+                "emoji": true
+              }
+            },
+            {
+              "type": "section",
+              "fields": [
+                {
+                  "type": "mrkdwn",
+                  "text": "*Repository:*\n'"$REPO_NAME"'"
+                },
+                {
+                  "type": "mrkdwn",
+                  "text": "*Branch:*\n'"$BRANCH_NAME"'"
+                },
+                {
+                  "type": "mrkdwn",
+                  "text": "*Start Time:*\n'"$START_TIME"'"
+                },
+                {
+                  "type": "mrkdwn",
+                  "text": "*End Time:*\n'"$END_TIME"'"
+                },
+                {
+                  "type": "mrkdwn",
+                  "text": "*Duration:*\n'"$DURATION"'"
+                },
+                {
+                  "type": "mrkdwn",
+                  "text": "*Status:*\n'"$STATUS"'"
+                }
+              ]
+            },
+            {
+              "type": "divider"
+            },
+            {
+              "type": "context",
+              "elements": [
+                {
+                  "type": "mrkdwn",
+                  "text": "Powered by GitHub Actions :octocat:"
+                }
+              ]
+            }
+          ]
         }' ${{ secrets.SLACK_WEBHOOK_URL }}
 
     # Step 6: Push the Docker image to Docker Hub
