@@ -43,9 +43,17 @@ jobs:
       run: |
         curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh
         # Run Trivy scan and output as JSON
-        ./bin/trivy image --severity CRITICAL --no-progress --format json ${{ secrets.DOCKER_USERNAME }}/pos-sytem-usecase:${{ env.TAG }} > trivy-results.json
+        ./bin/trivy image --severity CRITICAL --no-progress --format json ${{ secrets.DOCKER_USERNAME }}/pos-sytem-usecase:${{ env.LATEST_TAG }} > trivy-results.json
 
-        # Parse critical vulnerabilities using jq
+        # Check if the JSON contains any vulnerabilities
+        if ! jq -e '.Results[].Vulnerabilities | length > 0' trivy-results.json > /dev/null; then
+          echo "No vulnerabilities found or Trivy results are empty."
+          SLACK_MESSAGE="*Trivy Scan: SUCCESS* - No critical vulnerabilities found in Docker image '${{ env.TAG }}'."
+          curl -X POST -H 'Content-type: application/json' --data "{\"text\":\"${SLACK_MESSAGE}\"}" ${{ secrets.SLACK_WEBHOOK_URL }}
+          exit 0
+        fi
+
+        # Count critical vulnerabilities
         CRITICAL_COUNT=$(jq '[.Results[].Vulnerabilities[] | select(.Severity=="CRITICAL")] | length' trivy-results.json)
         echo "Critical vulnerabilities found: $CRITICAL_COUNT"
 
