@@ -17,6 +17,17 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
+    # Running build and tests
+    - name: Running build and tests
+      run: |
+        echo "Running build and tests..."
+        sleep 10  # Simulate build/test steps
+    
+    # Step : Record the start time of the pipeline
+    - name: Record Start Time
+      id: start_time
+      run: echo "start_time=$(date -u +"%Y-%m-%dT%H:%M:%SZ")" >> $GITHUB_ENV     
+
     # Step 2: Set up the Docker tag using GitHub SHA
     - name: Set Docker tag
       id: vars
@@ -67,14 +78,37 @@ jobs:
         ' trivy-results.json)
 
         # Slack message construction
-        if [ "$CRITICAL_COUNT" -gt 1 ]; then
-          SLACK_MESSAGE="*Trivy Scan: FAILED* - More than 10 critical vulnerabilities found in Docker image '${{ env.TAG }}' Critical vulnerabilities: $CRITICAL_COUNT.\n\n*Details:*\n$TABLE"
+        if [ "$CRITICAL_COUNT" -gt 10 ]; then
+          SLACK_MESSAGE="*Trivy Scan: FAILED* - More than 10 critical vulnerabilities found in Docker image '${{ env.TAG }}'. Critical vulnerabilities: $CRITICAL_COUNT.\n\n*Details:*\n$TABLE"
           curl -X POST -H 'Content-type: application/json' --data "{\"text\":\"${SLACK_MESSAGE}\"}" ${{ secrets.SLACK_WEBHOOK_URL }}
           exit 1
         else
           SLACK_MESSAGE="*Trivy Scan: SUCCESS* - Scan completed for Docker image '${{ env.TAG }}'. Critical vulnerabilities: $CRITICAL_COUNT.\n\n*Details:*\n$TABLE"
           curl -X POST -H 'Content-type: application/json' --data "{\"text\":\"${SLACK_MESSAGE}\"}" ${{ secrets.SLACK_WEBHOOK_URL }}
-        fi
+        fi   
+
+    # Step : Calculate duration and record completion time
+    - name: Record Completion Time and Duration
+      id: timing
+      run: |
+        end_time=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+        start_time=$(echo ${{ env.start_time }})
+        duration=$(( $(date -ud "$end_time" +'%s') - $(date -ud "$start_time" +'%s') ))
+        duration_formatted=$(printf '%02d:%02d:%02d' $((duration/3600)) $((duration%3600/60)) $((duration%60)))
+        echo "end_time=$end_time" >> $GITHUB_ENV
+        echo "duration=$duration_formatted" >> $GITHUB_ENV
+
+    # Step : Send data to Slack
+    - name: Notify Slack
+      env:
+        START_TIME: ${{ env.start_time }}
+        END_TIME: ${{ env.end_time }}
+        DURATION: ${{ env.duration }}
+      run: |
+        curl -X POST -H 'Content-type: application/json' \
+        --data '{
+          "text": "CI/CD Pipeline Report:\n- *Start Time:* '"$START_TIME"'\n- *End Time:* '"$END_TIME"'\n- *Duration:* '"$DURATION"'"
+        }' ${{ secrets.SLACK_WEBHOOK_URL }}
 
     # Step 6: Push the Docker image to Docker Hub
     #- name: Push Docker image
