@@ -17,10 +17,8 @@ spec:
   source:
     helm:
       valuesObject:
-        image: 
-          registry: adilsonbna
-          repository: pos-system
-          tag: '145933f'
+        image.repository: adilsonbna/pos-sytem-usecase
+        image.tag: '145933f'
     path: helm-charts/pos-system/application
     repoURL: "https://github.com/adilsonbna/usecase.git"
     targetRevision: main
