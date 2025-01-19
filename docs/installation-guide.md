@@ -8,22 +8,15 @@ The repository structure has been organized to separate development and producti
 ```plaintext
 ├── docs
 ├── envs
+│   ├── core
 │   ├── dev
-│   │   ├── monitoring
-│   │   └── security
 │   └── prd
 ├── helm-charts
 │   ├── monitoring
 │   │   └── kube-prometheus-stack
-│   │       └── templates
-│   │           ├── alertmanager
-│   │           ├── exporters
-│   │           ├── grafana
-│   │           ├── prometheus
-│   │           ├── prometheus-operator
-│   │           └── thanos-ruler
 │   └── security
-│       └── kyverno
+│       ├── kyverno
+│       └── trivy
 ├── iac
 │   ├── aks
 └── project

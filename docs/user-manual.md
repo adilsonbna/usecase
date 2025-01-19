@@ -3,7 +3,7 @@
 This step contains the necessary commands to Create an Application with ArgoCD
 
 ### 3. Configure a RootApp into New Project
-Apply manifest using kubectl e kustomize:
+Apply manifest using kubectl and kustomize:
 
 ```sh
 kubectl apply -f project/root-app.yaml
@@ -21,4 +21,7 @@ Sync application
 
 ```sh
 argocd app sync root-app-of-apps
+
 ```
+### 3. Check ArgoCD console
+This step you are able to see application installed automatically because current hirecharch created on the folder structure
