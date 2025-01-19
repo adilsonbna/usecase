@@ -38,20 +38,27 @@ jobs:
         docker build -t ${{ secrets.DOCKER_USERNAME }}/pos-sytem-usecase:${{ env.TAG }} ci
         docker tag ${{ secrets.DOCKER_USERNAME }}/pos-sytem-usecase:${{ env.TAG }} ${{ secrets.DOCKER_USERNAME }}/pos-sytem-usecase:${{ env.LATEST_TAG }}
 
-    # Step 5: Push the Docker image to Docker Hub
+    # Step 5: Tricy Scan Images
+    - name: Run Trivy Scan
+      run: |
+        curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh
+        CRITICAL_COUNT=$(./bin/trivy image --severity CRITICAL --no-progress --format json ${{ secrets.DOCKER_USERNAME }}/pos-sytem-usecase:${{ env.LATEST_TAG }} | jq '.Results[].Vulnerabilities[] | select(.Severity=="CRITICAL")' | wc -l)
+        echo "Critical vulnerabilities found: $CRITICAL_COUNT"
+        if [ "$CRITICAL_COUNT" -gt 1 ]; then
+          echo "More than 10 critical vulnerabilities detected. Failing the build."
+          SLACK_MESSAGE="Trivy Scan: FAILED - More than 10 critical vulnerabilities found in the Docker image '${{ env.tag }}'."
+          curl -X POST -H 'Content-type: application/json' --data "{\"text\":\"${SLACK_MESSAGE}\"}" ${{ secrets.SLACK_WEBHOOK_URL }}
+          exit 1
+        fi
+        SLACK_MESSAGE="Trivy Scan: SUCCESS - Trivy scan completed for Docker image '${{ env.TAG }}'. Critical vulnerabilities: $CRITICAL_COUNT."
+        curl -X POST -H 'Content-type: application/json' --data "{\"text\":\"${SLACK_MESSAGE}\"}" ${{ secrets.SLACK_WEBHOOK_URL }}
+
+
+
+    # Step 6: Push the Docker image to Docker Hub
     - name: Push Docker image
       run: |
         docker push ${{ secrets.DOCKER_USERNAME }}/pos-sytem-usecase:${{ env.TAG }}
         docker push ${{ secrets.DOCKER_USERNAME }}/pos-sytem-usecase:${{ env.LATEST_TAG }}
 
-    # Step 6: Tricy Scan Images
-    - name: Run Trivy Scan
-      run: |
-        curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh
-        ./bin/trivy image ${{ secrets.DOCKER_USERNAME }}/pos-sytem-usecase:${{ env.LATEST_TAG }} &&
-        CRITICAL_COUNT=$(trivy image --severity CRITICAL --no-progress --format json ${{ secrets.DOCKER_USERNAME }}/pos-sytem-usecase:${{ env.LATEST_TAG }} | jq '.Results[].Vulnerabilities[] | select(.Severity=="CRITICAL")' | wc -l)
-        echo "Critical vulnerabilities found: $CRITICAL_COUNT"
-        if [ "$CRITICAL_COUNT" -gt 10 ]; then
-          echo "More than 10 critical vulnerabilities detected. Failing the build."
-          exit 1
-        fi
+    
