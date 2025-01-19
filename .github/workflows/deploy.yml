@@ -38,7 +38,7 @@ jobs:
         docker build -t ${{ secrets.DOCKER_USERNAME }}/pos-sytem-usecase:${{ env.TAG }} ci
         docker tag ${{ secrets.DOCKER_USERNAME }}/pos-sytem-usecase:${{ env.TAG }} ${{ secrets.DOCKER_USERNAME }}/pos-sytem-usecase:${{ env.LATEST_TAG }}
 
-    # Step 5: Tricy Scan Images
+    # Step 5: Trivy Scan Images
     - name: Run Trivy Scan
       run: |
         curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh
@@ -65,7 +65,7 @@ jobs:
         ' trivy-results.json)
 
         # Slack message construction
-        if [ "$CRITICAL_COUNT" -gt 10 ]; then
+        if [ "$CRITICAL_COUNT" -gt 1 ]; then
           SLACK_MESSAGE="*Trivy Scan: FAILED* - More than 10 critical vulnerabilities found in Docker image '${{ env.TAG }}'.\n\n*Details:*\n$TABLE"
           curl -X POST -H 'Content-type: application/json' --data "{\"text\":\"${SLACK_MESSAGE}\"}" ${{ secrets.SLACK_WEBHOOK_URL }}
           exit 1
