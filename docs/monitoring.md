@@ -58,8 +58,7 @@ Important dashboard files create for the use case
 ├── trivy.yaml
 ├── pos-system.yaml
 ```
-
-[ArgoCD](docs/img/argocd.jpg)
-[Kyverno](docs/img/kyverno.jpg)
-[Trivy](docs/img/trivy.jpg)
-[Application](docs/img/application.jpg)
+![ArgoCD](img/argocd.jpg)
+![Kyverno](img/kyverno.jpg)
+![Trivy](img/trivy.jpg)
+![Application](img/application.jpg)
