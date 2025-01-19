@@ -43,7 +43,7 @@ jobs:
       run: |
         curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh
         # Run Trivy scan and output as JSON
-        ./bin/trivy image --severity CRITICAL --no-progress --format json ${{ secrets.DOCKER_USERNAME }}/pos-sytem-usecase:${{ env.LATEST_TAG }} > trivy-results.json
+        ./bin/trivy image --severity LOW --no-progress --format json ${{ secrets.DOCKER_USERNAME }}/pos-sytem-usecase:${{ env.LATEST_TAG }} > trivy-results.json
 
         # Check if the JSON contains any vulnerabilities
         if ! jq -e '.Results[].Vulnerabilities | length > 0' trivy-results.json > /dev/null; then
@@ -54,13 +54,13 @@ jobs:
         fi
 
         # Count critical vulnerabilities
-        CRITICAL_COUNT=$(jq '[.Results[].Vulnerabilities[] | select(.Severity=="CRITICAL")] | length' trivy-results.json)
+        CRITICAL_COUNT=$(jq '[.Results[].Vulnerabilities[] | select(.Severity=="LOW")] | length' trivy-results.json)
         echo "Critical vulnerabilities found: $CRITICAL_COUNT"
 
         # Generate table data for Slack
         TABLE=$(jq -r '
           .Results[].Vulnerabilities[] | 
-          select(.Severity=="CRITICAL") | 
+          select(.Severity=="LOW") | 
           "- *ID*: \(.VulnerabilityID)\n  *Severity*: \(.Severity)\n  *Package*: \(.PkgName)\n  *Version*: \(.InstalledVersion)\n  *Description*: \(.Description | .[:100])\n"
         ' trivy-results.json)
 
@@ -75,9 +75,9 @@ jobs:
         fi
 
     # Step 6: Push the Docker image to Docker Hub
-    - name: Push Docker image
-      run: |
-        docker push ${{ secrets.DOCKER_USERNAME }}/pos-sytem-usecase:${{ env.TAG }}
-        docker push ${{ secrets.DOCKER_USERNAME }}/pos-sytem-usecase:${{ env.LATEST_TAG }}
+    #- name: Push Docker image
+    #  run: |
+    #    docker push ${{ secrets.DOCKER_USERNAME }}/pos-sytem-usecase:${{ env.TAG }}
+    #    docker push ${{ secrets.DOCKER_USERNAME }}/pos-sytem-usecase:${{ env.LATEST_TAG }}
 
     
