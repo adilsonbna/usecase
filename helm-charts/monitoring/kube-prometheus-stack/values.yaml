@@ -4011,6 +4011,16 @@ prometheus:
           - source_labels: [__meta_kubernetes_namespace]
             target_label: namespace
             replacement: dev-ern-pos-system
+      - job_name: 'dev-kkm-pos-system'
+        kubernetes_sd_configs:
+          - role: pod
+        relabel_configs:
+          - source_labels: [__meta_kubernetes_pod_label_app]
+            target_label: app
+            replacement: dev-kkm-pos-system
+          - source_labels: [__meta_kubernetes_namespace]
+            target_label: namespace
+            replacement: dev-kkm-pos-system
     # - job_name: kube-etcd
     #   kubernetes_sd_configs:
     #     - role: node
