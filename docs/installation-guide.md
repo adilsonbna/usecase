@@ -28,21 +28,21 @@ The repository structure has been organized to separate development and producti
 └── root-app.yaml 
 ```
 
-### 1. Clone repository
-Clone this repository to our machina
+## Clone repository
+Clone this repository to your machine
 
 ```sh
 git clone https://github.com/adilson-silva1_mars/usecase.git
 ```
 
-### 2. First ArgoCD login password
+## First ArgoCD login password
 Command to execute to get ArgoCD password
 
 ```sh
 kubectl -n cicd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
 ```
 
-### 3. Add AKS Cluster on ArgoCD
+## Add AKS Cluster on ArgoCD
 
 ```sh
 argo login <your ArgoCD IP>
@@ -52,7 +52,7 @@ argo login <your ArgoCD IP>
 argocd cluster add <your AKS Cluster name>
 ```
 
-### 4. Add Git Repository on ArgoCD
+## Add Git Repository on ArgoCD
 
 ```sh
 argocd repo add <your git repository> --username <your git username> --password <your git token> 

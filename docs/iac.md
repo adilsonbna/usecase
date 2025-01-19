@@ -2,22 +2,33 @@
 Manage store-level configurations and deployments using GitOps practices.
 
 ```plaintext
-└── aks
-    ├── main.tf
-    ├── terraform.tfvars
-    └── variables.tf
+├── iac
+│   └── aks
+│       ├── main.tf
+│       ├── terraform.tfvars
+│       └── variables.tf
 ```
 
-# main.tf
+## main.tf
 This is the primary configuration file where you define the resources you want to create and manage in your infrastructure.
 
-# variables.tf
+## variables.tf
 This file is used to define input variables for your Terraform configurations. It helps you make your configuration more dynamic and reusable by externalizing values.
 
-# terraform.tfvars
+## terraform.tfvars
 This file is used to provide values for the variables defined in variables.tf. It simplifies the process of passing values into your configuration, especially for environments like staging, production, or development.
 
 # How to execute IaC to deploy AKS Cluster 
+
+## Clone repository
+Clone this repository to your machine
+
+```sh
+git clone https://github.com/adilson-silva1_mars/usecase.git
+```
+
+## IaC AKS folder structure
+Go to iac/aks folder to execute commands below:
 
 Run terraform plan to:
 - Validate configurations.
