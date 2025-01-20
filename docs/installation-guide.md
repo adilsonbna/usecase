@@ -32,7 +32,7 @@ The repository structure has been organized to separate development and producti
 Clone this repository to your machine
 
 ```sh
-git clone https://github.com/adilson-silva1_mars/usecase.git
+git clone https://github.com/adilsonbna/usecase.git
 ```
 
 ## First ArgoCD login password
