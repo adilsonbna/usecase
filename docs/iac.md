@@ -24,11 +24,21 @@ This file is used to provide values for the variables defined in variables.tf. I
 Clone this repository to your machine
 
 ```sh
-git clone https://github.com/adilson-silva1_mars/usecase.git
+git clone https://github.com/adilsonbna/usecase.git
 ```
 
 ## IaC AKS folder structure
 Go to iac/aks folder to execute commands below:
+
+Run terraform init to:
+- Create a new Terraform project.
+- Modifying the backend configuration.
+- Adding or updating provider requirements.
+- Changing module dependencies.
+
+```sh
+terraform init
+```
 
 Run terraform plan to:
 - Validate configurations.
@@ -63,7 +73,7 @@ resource "helm_release" "argocd" {
   create_namespace = true
 
   values = [
-    file("/Users/adilsoncesar/Desktop/usecase/project/cicd/argocd/values.yaml")
+    file("project/cicd/argocd/values.yaml")
   ]
 }
 ```

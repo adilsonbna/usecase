@@ -22,13 +22,13 @@ variable "dns_prefix" {
 variable "node_count" {
   description = "The number of nodes in the AKS cluster."
   type        = number
-  default     = 3
+  default     = 2
 }
 
 variable "vm_size" {
   description = "The size of the VMs in the AKS cluster."
   type        = string
-  default     = "Standard_B2s"
+  default     = "Standard_D2s_v3"
 }
 
 variable "argocd_chart_version" {

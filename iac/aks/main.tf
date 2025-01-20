@@ -45,7 +45,7 @@ resource "helm_release" "argocd" {
   create_namespace = true
 
   values = [
-    file("/Users/adilsoncesar/Desktop/usecase/project/cicd/argocd/values.yaml")
+    file("../../project/cicd/argocd/values.yaml")
   ]
 }
 
