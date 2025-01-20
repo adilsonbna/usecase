@@ -5,7 +5,7 @@ Manage store-level configurations and deployments using GitOps practices.
 ├── iac
 │   └── aks
 │       ├── main.tf
-│       ├── terraform.tfvars
+│       ├── newstore.tfvars
 │       └── variables.tf
 ```
 
@@ -15,8 +15,9 @@ This is the primary configuration file where you define the resources you want t
 ## variables.tf
 This file is used to define input variables for your Terraform configurations. It helps you make your configuration more dynamic and reusable by externalizing values.
 
-## terraform.tfvars
-This file is used to provide values for the variables defined in variables.tf. It simplifies the process of passing values into your configuration, especially for environments like staging, production, or development.
+## newstore.tfvars
+This file is used to provide values for the variables defined in variables.tf. It simplifies the process of passing values into your configuration, especially for environments like multiple configurations.
+
 
 # How to execute IaC to deploy AKS Cluster 
 
@@ -52,9 +53,11 @@ terraform plan
 Run terraform apply to:
 - Execute the changes from the plan.
 - Provision resources or update your infrastructure.
+- If required change to a new store location using .tfvars file.
 
 ```sh
-terraform apply
+terraform apply -var-file="newstore.tfvars"
+
 ```
 
 # IaC for ArgoCD helm chart deployment
