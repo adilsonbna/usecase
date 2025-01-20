@@ -1,4 +1,4 @@
-# Welcome to the **POS System DevOps** Repository!  
+# Welcome to the **POS System DevOps** Repository
 Here, you'll find useful information and documentation related to the development and usage of this project.
 
 ## Table of Contents
@@ -16,10 +16,10 @@ Here, you'll find useful information and documentation related to the developmen
 
 ---
 
-## Overview use-case
+## Overview
 This project we have establish a structured approach for managing infrastructure by creating dedicated Git repositories to store configurations and deployment templates. 
 
 To streamline the deployment of POS software updates, set up CI/CD pipelines using modern GitOps tools like ArgoCD. 
 
-These pipelines should support automated deployments across distinct environments—Development, Testing, and Production—enabling efficient testing, validation, and rollouts while reducing manual intervention.
+These pipelines are automated deployments across distinct environments—Development, Testing, and Production—enabling efficient testing, validation, and rollouts while reducing manual intervention.
 
