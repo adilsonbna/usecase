@@ -26,5 +26,9 @@ Automate POS updates and manage store-specific configurations.
     └── deploy.yml
 ```
 
-# Vulnerabilities Scan inside Pipeline
+# Vulnerabilities Scan inside Pipeline to approve or not push image to deploy
+
+![TrivyScan](img/trity-scan-pipe.jpg)
+
+
 
