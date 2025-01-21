@@ -23,3 +23,5 @@ To streamline the deployment of POS software updates, set up CI/CD pipelines usi
 
 These pipelines are automated deployments across distinct environments—Development, Testing, and Production—enabling efficient testing, validation, and rollouts while reducing manual intervention.
 
+![Arch](docs/img/devsecops-arch.jpg)
+
