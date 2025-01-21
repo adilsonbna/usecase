@@ -28,7 +28,7 @@ Automate POS updates and manage store-specific configurations.
 
 # Vulnerabilities Scan inside Pipeline to approve or not push image to deploy
 
-![TrivyScan](img/trity-scan-pipe.jpg)
+[TrivyScan](img/trity-scan-pipe.jpg)
 
 
 
