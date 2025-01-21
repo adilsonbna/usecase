@@ -25,3 +25,6 @@ Automate POS updates and manage store-specific configurations.
 └── workflows
     └── deploy.yml
 ```
+
+# Vulnerabilities Scan inside Pipeline
+

@@ -28,13 +28,6 @@ The repository structure has been organized to separate development and producti
 └── root-app.yaml 
 ```
 
-## Clone repository
-Clone this repository to your machine
-
-```sh
-git clone https://github.com/adilsonbna/usecase.git
-```
-
 ## First ArgoCD login password
 Command to execute to get ArgoCD password
 

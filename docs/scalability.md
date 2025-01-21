@@ -1,4 +1,4 @@
-# Scalability
+# Application Scalability
 Seamlessly onboard new stores by reusing configuration templates.
 
 To achieve scalability, you can leverage a GitOps approach to add multiple clusters and repositories within GitHub, enabling the deployment of various applications from a centralized location.
