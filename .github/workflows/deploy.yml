@@ -82,10 +82,10 @@ jobs:
         fi   
 
     # Step 7: Push the Docker image to Docker Hub
-    #- name: Push Docker image
-    #  run: |
-    #    docker push ${{ secrets.DOCKER_USERNAME }}/pos-sytem-usecase:${{ env.TAG }}
-    #    docker push ${{ secrets.DOCKER_USERNAME }}/pos-sytem-usecase:${{ env.LATEST_TAG }}
+    - name: Push Docker image
+      run: |
+        docker push ${{ secrets.DOCKER_USERNAME }}/pos-sytem-usecase:${{ env.TAG }}
+        docker push ${{ secrets.DOCKER_USERNAME }}/pos-sytem-usecase:${{ env.LATEST_TAG }}
         
     # Step 8: Calculate duration and record completion time
     - name: Record Completion Time and Duration
